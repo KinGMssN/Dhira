@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dhira — धीरा</title>
+  <meta name="description" content="Mohith, writing under the pen name Dhira. Exploring ideas, skills, and challenges — just for fun." />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .splash-screen {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background:var(--off-white); z-index:9999;
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), visibility 0.8s;
+    }
+    .splash-screen.fade-out { opacity:0; visibility:hidden; pointer-events:none; }
+    .splash-logo-img {
+      width:180px; height:auto; margin-bottom:2.5rem;
+      mix-blend-mode:multiply;
+      opacity:0; transform:translateY(15px);
+      animation: splashLogoFadeIn 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    .splash-timer {
+      font-family:'Cormorant Garamond',serif; font-size:6rem; font-weight:300;
+      color:var(--sage); line-height:1; height:6rem;
+      display:flex; justify-content:center; align-items:center;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s;
+    }
+    .splash-timer.tick { transform:scale(0.8); opacity:0; }
+    @keyframes splashLogoFadeIn { to { opacity:1; transform:translateY(0); } }
+
+    .hero { padding:160px 4rem 100px; max-width:1120px; position:relative; overflow:hidden; margin:0 auto; }
+    .hero-container { display:flex; gap:5rem; align-items:center; justify-content:space-between; position:relative; z-index:2; }
+    .hero-text-content { flex:1.2; max-width:600px; }
+    .hero-image-wrapper { flex:0.8; display:flex; justify-content:flex-end; }
+    .hero-image {
+      width:100%; max-width:320px; aspect-ratio:3/4; object-fit:cover;
+      border-radius:8px; border:1px solid var(--stone);
+      box-shadow:0 20px 40px rgba(0,0,0,0.06); opacity:0;
+      animation: imageReveal 1.2s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), box-shadow 0.6s;
+    }
+    .hero-image:hover { transform:translateY(-8px) scale(1.02); box-shadow:0 32px 64px rgba(0,0,0,0.1); }
+    @keyframes imageReveal {
+      0%   { opacity:0; transform:translateY(30px) scale(0.97); filter:blur(5px); }
+      100% { opacity:1; transform:translateY(0)    scale(1);    filter:blur(0);   }
+    }
+    .hero-devanagari {
+      font-size:13rem; line-height:1; color:var(--stone); font-family:serif;
+      position:absolute; right:-2rem; top:80px;
+      user-select:none; pointer-events:none; z-index:1;
+    }
+    .hero-eyebrow { font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--sage); font-weight:500; margin-bottom:1.4rem; }
+    .hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.8rem,5.5vw,4.8rem); font-weight:300; line-height:1.12; color:var(--charcoal); margin-bottom:2rem; }
+    .hero h1 em { font-style:italic; color:var(--sage); }
+    .hero-bio p { font-size:1rem; color:var(--mid-grey); font-weight:300; line-height:1.9; margin-bottom:1rem; }
+    .hero-bio strong { color:var(--charcoal); font-weight:500; }
+    .hero-bio em { font-style:italic; color:var(--sage); }
+
+    .categories { padding:80px 4rem; }
+    .section-label { font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--light-grey); font-weight:500; margin-bottom:3rem; }
+    .categories-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+    .category-card {
+      background:var(--white); border:1px solid var(--stone); padding:2.8rem 2.4rem;
+      text-decoration:none; color:inherit;
+      transition: background 0.25s, border-color 0.25s;
+      display:block; position:relative; overflow:hidden; cursor:pointer;
+    }
+    .category-card::before {
+      content:''; position:absolute; bottom:0; left:0;
+      width:100%; height:3px; background:var(--sage);
+      transform:scaleX(0); transform-origin:left; transition:transform 0.3s ease;
+    }
+    .category-card:hover { background:var(--off-white); border-color:var(--sage-light); }
+    .category-card:hover::before { transform:scaleX(1); }
+    .category-number { font-family:'Cormorant Garamond',serif; font-size:3.5rem; font-weight:300; color:var(--stone); line-height:1; margin-bottom:1.2rem; }
+    .category-title  { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:500; margin-bottom:0.6rem; color:var(--charcoal); }
+    .category-desc   { font-size:0.82rem; color:var(--mid-grey); line-height:1.7; font-weight:300; }
+    .category-arrow  { margin-top:2rem; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--sage); }
+
+    @media (max-width:900px) {
+      .hero { padding:120px 1.5rem 70px; max-width:100%; }
+      .hero-container { flex-direction:column-reverse; gap:3rem; align-items:center; }
+      .hero-image { max-width:280px; }
+      .hero-devanagari { font-size:6rem; right:0; top:100px; }
+      .categories { padding:60px 1.5rem; }
+      .categories-grid { grid-template-columns:1fr; gap:1px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-screen" id="splash-screen">
+    <img src="logo.png" alt="Dhira Logo" class="splash-logo-img" />
+    <div class="splash-timer" id="splash-timer">3</div>
+  </div>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Dhira <span>धीरा</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="personal.html">Personal</a></li>
+      <li><a href="thoughts.html">Thoughts</a></li>
+      <li><a href="book.html">The Book</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-devanagari">धीरा</div>
+    <div class="hero-container">
+      <div class="hero-text-content">
+        <p class="hero-eyebrow">Mohith · Dhira</p>
+        <h1>A jack of all trades,<br><em>exploring everything.</em></h1>
+        <div class="hero-bio">
+          <p>I'm <strong>Mohith</strong>, writing under the pen name <strong>Dhira</strong>. I enjoy exploring new ideas, learning new skills, and taking on challenges — just for fun.</p>
+          <p>I am firmly committed to the philosophy of being a <strong>jack of all trades, master of none — but often better than a master of one.</strong></p>
+          <p>My curiosity often leads me to different fields and interests, giving me the opportunity to learn from a wide range of experiences. And writing is always one of them.</p>
+        </div>
+      </div>
+      <div class="hero-image-wrapper">
+        <img src="profile.jpg" alt="Mohith" class="hero-image" />
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule" />
+
+  <section class="categories">
+    <p class="section-label">Explore the writing</p>
+    <div class="categories-grid">
+      <a class="category-card" href="personal.html">
+        <div class="category-number">01</div>
+        <div class="category-title">Personal</div>
+        <p class="category-desc">Essays on lived experience, quiet observations, and the texture of everyday days.</p>
+        <p class="category-arrow">Read essays →</p>
+      </a>
+      <a class="category-card" href="thoughts.html">
+        <div class="category-number">02</div>
+        <div class="category-title">Thoughts</div>
+        <p class="category-desc">Unfinished ideas, sudden questions, and things that arrive without invitation.</p>
+        <p class="category-arrow">Browse thoughts →</p>
+      </a>
+      <a class="category-card" href="book.html">
+        <div class="category-number">03</div>
+        <div class="category-title">The Book</div>
+        <p class="category-desc">Notes from inside a work in progress — the writing, the doubt, the discoveries.</p>
+        <p class="category-arrow">Follow the journey →</p>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Dhira</div>
+    <div class="footer-devanagari">धीरा</div>
+  </footer>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const timerEl  = document.getElementById('splash-timer');
+      const splashEl = document.getElementById('splash-screen');
+      let count = 3;
+      const interval = setInterval(() => {
+        timerEl.classList.add('tick');
+        setTimeout(() => {
+          count--;
+          if (count > 0) { timerEl.textContent = count; timerEl.classList.remove('tick'); }
+          else { clearInterval(interval); splashEl.classList.add('fade-out'); }
+        }, 400);
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

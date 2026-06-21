@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal — Dhira</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <a class="nav-logo" href="index.html">Dhira <span>धीरा</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="personal.html" class="active">Personal</a></li>
+      <li><a href="thoughts.html">Thoughts</a></li>
+      <li><a href="book.html">The Book</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div id="list-view">
+    <div class="subpage-container">
+      <p class="page-eyebrow">Essays & Reflections</p>
+      <h1>Personal <em>essays.</em></h1>
+      <p class="subpage-intro">Reflections on lived experiences, quiet observations, and the texture of days. Writing that starts in the particular and reaches toward something larger.</p>
+    </div>
+    <div class="essay-list" id="essay-list"></div>
+    <footer><div class="footer-logo">Dhira</div><div class="footer-devanagari">धीरा</div></footer>
+  </div>
+
+  <div id="reader-view" style="display:none;">
+    <div class="blog-reader">
+      <a class="blog-reader-back" onclick="showList()">← Back to essays</a>
+      <h1 id="reader-title"></h1>
+      <div class="blog-reader-meta" id="reader-meta"></div>
+      <div class="blog-reader-body" id="reader-body"></div>
+    </div>
+    <footer><div class="footer-logo">Dhira</div><div class="footer-devanagari">धीरा</div></footer>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    let _blogs = [];
+
+    function fmt(iso) {
+      return new Date(iso).toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' });
+    }
+
+    async function renderList() {
+      const list = document.getElementById('essay-list');
+      list.innerHTML = '<div class="empty-state"><p>Loading…</p></div>';
+      try {
+        const res = await fetch(`${DHIRA_CONFIG.API_BASE}/posts?category=personal`);
+        if (!res.ok) throw new Error('Server error');
+        _blogs = await res.json();
+        if (!_blogs.length) {
+          list.innerHTML = '<div class="empty-state"><p>No essays published yet. Check back soon.</p></div>';
+          return;
+        }
+        list.innerHTML = _blogs.map(b => `
+          <div class="essay-item">
+            <div class="essay-meta">
+              <span>${fmt(b.date)}</span>
+              ${b.tag ? `<span class="essay-tag">${b.tag}</span>` : ''}
+            </div>
+            <div class="essay-title" onclick="openBlog('${b.id}')">${b.title}</div>
+            <p class="essay-excerpt">${b.excerpt || b.body.substring(0,160).replace(/\n/g,' ')+'…'}</p>
+            <span class="essay-link" onclick="openBlog('${b.id}')">Read essay →</span>
+          </div>`).join('');
+      } catch {
+        list.innerHTML = '<div class="empty-state"><p>Could not load essays. Please try again later.</p></div>';
+      }
+    }
+
+    function openBlog(id) {
+      const b = _blogs.find(x => x.id === id);
+      if (!b) return;
+      document.getElementById('reader-title').textContent = b.title;
+      document.getElementById('reader-meta').innerHTML =
+        `<span>${fmt(b.date)}</span>${b.tag ? `<span class="essay-tag">${b.tag}</span>` : ''}`;
+      document.getElementById('reader-body').innerHTML =
+        b.body.split('\n\n').map(p => `<p>${p}</p>`).join('');
+      document.getElementById('list-view').style.display = 'none';
+      document.getElementById('reader-view').style.display = 'block';
+      window.scrollTo(0,0);
+    }
+
+    function showList() {
+      document.getElementById('reader-view').style.display = 'none';
+      document.getElementById('list-view').style.display = 'block';
+      window.scrollTo(0,0);
+    }
+
+    renderList();
+  </script>
+</body>
+</html>
