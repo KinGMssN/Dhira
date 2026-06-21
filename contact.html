@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Dhira</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .contact-page h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      font-weight: 300; line-height: 1.15;
+      margin-bottom: 1rem; color: var(--charcoal);
+    }
+    .contact-page h1 em { font-style: italic; color: var(--sage); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Dhira <span>धीरा</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="personal.html">Personal</a></li>
+      <li><a href="thoughts.html">Thoughts</a></li>
+      <li><a href="book.html">The Book</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="contact-page">
+    <p class="page-eyebrow">Get in touch</p>
+    <h1>Say <em>hello.</em></h1>
+    <p class="contact-intro">Whether you want to share a thought, talk about something I've written, or just say hi — I'd love to hear from you. Drop a message below and I'll write back.</p>
+
+    <div class="contact-form" id="contactForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cf-name">Your Name</label>
+          <input type="text" id="cf-name" placeholder="What should I call you?" />
+        </div>
+        <div class="form-group">
+          <label for="cf-email">Your Email</label>
+          <input type="email" id="cf-email" placeholder="so I can write back" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cf-subject">Subject</label>
+        <input type="text" id="cf-subject" placeholder="What's on your mind?" />
+      </div>
+      <div class="form-group">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" placeholder="Go ahead, take your time..."></textarea>
+      </div>
+      <div class="form-submit">
+        <button class="btn-send" type="button" onclick="handleContact()">Send Message</button>
+        <span class="form-note">I read every message personally.</span>
+      </div>
+    </div>
+
+    <div class="contact-success" id="contactSuccess">
+      ✦ &nbsp;Thank you for writing. I'll get back to you soon.
+    </div>
+
+    <hr class="contact-divider" />
+
+    <p class="contact-alt">
+      Prefer email directly? Reach me at <a href="mailto:dhirathepen@gmail.com">dhirathepen@gmail.com</a><br/>
+      I usually reply within a few days — not because I'm slow, but because I think before I write.
+    </p>
+  </div>
+
+  <footer>
+    <div class="footer-logo">Dhira</div>
+    <div class="footer-devanagari">धीरा</div>
+  </footer>
+
+  <script>
+    function handleContact() {
+      const name = document.getElementById('cf-name').value.trim();
+      const email = document.getElementById('cf-email').value.trim();
+      const message = document.getElementById('cf-message').value.trim();
+      if (!name || !email || !message) {
+        alert('Please fill in your name, email, and message.');
+        return;
+      }
+      const subject = document.getElementById('cf-subject').value.trim() || 'Hello from Dhira';
+      const body = `Hi Mohith,\n\n${message}\n\n— ${name}\n${email}`;
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=dhirathepen@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.open(gmailUrl, '_blank');
+      document.getElementById('contactForm').style.opacity = '0.4';
+      document.getElementById('contactSuccess').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
