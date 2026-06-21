@@ -10,5 +10,5 @@
  *   API_BASE: 'https://dhira-backend.onrender.com/api'
  */
 const DHIRA_CONFIG = {
-  API_BASE: 'https://YOUR-RENDER-APP-NAME.onrender.com/api',
+  API_BASE: 'https://dhira-backend.onrender.com//api',
 };
